@@ -484,7 +484,7 @@ border-color: var(--gold);
 @media print {
 @page { margin: 12mm; size: auto; }
 body { background: #fff !important; padding: 0; max-width: 100%; color: #1a1410 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-body::before, body::after { display: none !important; }
+body::before, body::after, #starfield { display: none !important; }
 .tabs, .sub-tabs, .btn-group, .btn, .gender-btn, .tab, .sub-tab, .header-area, .ad-banner, .notice-bar, .bottom-cta, #toolbarJishi, #toolbarBazi { display: none !important; }
 .tab-content { display: block !important; border: none; box-shadow: none; background: #fff !important; }
 .tab-content * { color: #1a1410 !important; }
@@ -728,11 +728,21 @@ transition: all 0.2s;
 .price-tag { background: rgba(201,169,110,0.15); color: #c9a96e; padding: 5px 12px; border-radius: 14px; font-size: 12px; border: 1px solid rgba(201,169,110,0.3); font-family: 'Noto Serif SC', serif; }
 .unlock-btn { background: linear-gradient(135deg, #c9a96e, #b8963e); color: #1a1410; border: none; padding: 12px 32px; border-radius: 25px; font-size: 15px; font-weight: bold; cursor: pointer; width: 100%; letter-spacing: 1px; transition: opacity 0.2s; font-family: 'Noto Serif SC', serif; }
 .unlock-btn:active { opacity: 0.85; }
+/* === Starfield === */
+@keyframes twinkle1 { 0%,100%{opacity:0.15} 50%{opacity:0.7} }
+@keyframes twinkle2 { 0%,100%{opacity:0.5} 30%{opacity:0.1} 70%{opacity:0.8} }
+@keyframes twinkle3 { 0%,100%{opacity:0.3} 40%{opacity:0.05} 80%{opacity:0.9} }
+@keyframes drift { 0%{transform:translateY(0)} 100%{transform:translateY(-120px)} }
+.star{position:absolute;border-radius:50%;background:#fff;pointer-events:none}
+.star.s1{animation:twinkle1 var(--d) ease-in-out infinite;animation-delay:var(--dl)}
+.star.s2{animation:twinkle2 var(--d) ease-in-out infinite;animation-delay:var(--dl)}
+.star.s3{animation:twinkle3 var(--d) ease-in-out infinite;animation-delay:var(--dl)}
 </style>
 <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
 </head>
 <body>
-<div id="loadingOverlay"><div class="loader"></div><p>推 算 中 …</p></div>
+<div id="starfield" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;"></div>
+<div id="loadingOverlay">"><div class="loader"></div><p>推 算 中 …</p></div>
 <div class="bagua-symbols">
 <span class="b-qian">☰</span>
 <span class="b-dui">☱</span>
@@ -775,7 +785,7 @@ transition: all 0.2s;
 <span style="font-size:13px;color:var(--text2);"> 领取数字体系高维免费课程</span>
 </div>
 <div class="notice-bar" style="margin:4px 0;padding:6px 0;overflow:hidden;white-space:nowrap;border-bottom:1px solid rgba(201,169,110,0.15);">
-<span class="notice-scroll" style="display:inline-block;animation:noticeScroll 18s linear infinite;font-size:12px;color:var(--text4);letter-spacing:1px;">⚠ 温馨提示：本软件为初级测试版本，目前只作为起卦作用，大部分功能正在开发中，敬请期待……</span>
+<span class="notice-scroll" style="display:inline-block;animation:noticeScroll 18s linear infinite;font-size:12px;color:var(--text4);letter-spacing:1px;">🔮 数字体系起卦系统 —— 看懂规律，活出更好的自己</span>
 </div>
 <div class="tabs">
 <button class="tab active" onclick="switchMainTab('jishi')">即时起卦</button>
@@ -1022,5 +1032,6 @@ transition: all 0.2s;
 <button class="dp-confirm" onclick="confirmDp()">确 认</button>
 </div>
 </div>
+<script>!function(){var t=document.getElementById("starfield");if(t){for(var e=document.createDocumentFragment(),a=0;a<180;a++){var d=document.createElement("div"),o=(2*Math.random()+.4).toFixed(1),n=["s1","s2","s3"][Math.floor(3*Math.random())];d.className="star "+n,d.style.cssText="left:"+(100*Math.random()).toFixed(1)+"%;top:"+(100*Math.random()).toFixed(1)+"%;width:"+o+"px;height:"+o+"px;--d:"+(4*Math.random()+2).toFixed(1)+"s;--dl:"+(6*Math.random()).toFixed(1)+"s",e.appendChild(d)}t.appendChild(e)}}();</script>
 </body>
 </html>
