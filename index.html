@@ -650,7 +650,7 @@ transition: all 0.2s;
 .archive-actions button:hover { border-color:var(--gold);color:var(--gold); }
 .archive-actions .del-btn:hover { border-color:var(--zhu);color:var(--zhu); }
 #baziArchive, #baziArchiveToggle { display:none; }
-#loadingOverlay { position:fixed; inset:0; z-index:9999; background:var(--bg-deep); display:flex; flex-direction:column; align-items:center; justify-content:center; animation:loFadeOut .01s 6s forwards;}
+#loadingOverlay { position:fixed; inset:0; z-index:9999; background:var(--bg-deep); display:flex; flex-direction:column; align-items:center; justify-content:center; animation:loFadeOut .01s 6s forwards; pointer-events:none;}
 #loadingOverlay .loader { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; }
 #loadingOverlay p { margin-top:16px; color:var(--accent); font-size:16px; letter-spacing:4px; font-family:'Noto Serif SC',serif; }
 @keyframes spin { to{transform:rotate(360deg);} }
