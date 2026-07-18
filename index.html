@@ -761,17 +761,17 @@ transition: all 0.2s;
 </div>
 <div id="topToolbar" style="position:fixed;top:10px;left:12px;right:12px;z-index:100;display:flex;gap:6px;align-items:flex-start;justify-content:space-between;pointer-events:none;">
 <div style="display:flex;flex-direction:column;gap:6px;align-items:stretch;pointer-events:auto;">
+<div id="toolbarWechat">
+<button class="btn btn-archive" onclick="showWechatDialog()" style="padding:4px 10px;font-size:11px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path fill="var(--gold)" d="M9.5 4C5.36 4 2 6.69 2 10c0 1.89 1.08 3.56 2.78 4.66l-.7 2.1 2.45-1.23c.65.18 1.33.3 2.05.33-.05-.28-.08-.57-.08-.86 0-3.31 3.13-6 7-6 .33 0 .65.02.97.06C15.87 6.17 12.97 4 9.5 4z"/><path fill="var(--gold)" d="M22 15c0-2.76-2.69-5-6-5s-6 2.24-6 5 2.69 5 6 5c.61 0 1.2-.08 1.75-.22L20 21l-.6-1.8C20.98 18.29 22 16.75 22 15z"/><circle cx="7" cy="8.5" r="1" fill="var(--bg-deep)"/><circle cx="12" cy="8.5" r="1" fill="var(--bg-deep)"/><circle cx="14" cy="14.6" r=".9" fill="var(--bg-deep)"/><circle cx="18" cy="14.6" r=".9" fill="var(--bg-deep)"/></svg>加微信</button>
+</div>
+</div>
+<div style="display:flex;gap:6px;align-items:center;pointer-events:auto;">
 <div id="toolbarJishiArchive" style="display:none;">
 <button class="btn btn-archive" onclick="toggleJishiArchive()" style="padding:4px 10px;font-size:11px;">起卦记录 ▾</button>
 </div>
 <div id="toolbarBaziArchive" style="display:none;">
 <button class="btn btn-archive" onclick="toggleBaziArchive()" style="padding:4px 10px;font-size:11px;">起卦记录 ▾</button>
 </div>
-<div id="toolbarWechat">
-<button class="btn btn-archive" onclick="showWechatDialog()" style="padding:4px 10px;font-size:11px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path fill="var(--gold)" d="M9.5 4C5.36 4 2 6.69 2 10c0 1.89 1.08 3.56 2.78 4.66l-.7 2.1 2.45-1.23c.65.18 1.33.3 2.05.33-.05-.28-.08-.57-.08-.86 0-3.31 3.13-6 7-6 .33 0 .65.02.97.06C15.87 6.17 12.97 4 9.5 4z"/><path fill="var(--gold)" d="M22 15c0-2.76-2.69-5-6-5s-6 2.24-6 5 2.69 5 6 5c.61 0 1.2-.08 1.75-.22L20 21l-.6-1.8C20.98 18.29 22 16.75 22 15z"/><circle cx="7" cy="8.5" r="1" fill="var(--bg-deep)"/><circle cx="12" cy="8.5" r="1" fill="var(--bg-deep)"/><circle cx="14" cy="14.6" r=".9" fill="var(--bg-deep)"/><circle cx="18" cy="14.6" r=".9" fill="var(--bg-deep)"/></svg>加微信</button>
-</div>
-</div>
-<div style="display:flex;gap:6px;align-items:center;pointer-events:auto;">
 <div id="toolbarJishi">
 <button class="btn btn-pdf" onclick="window.print()">导出PDF</button>
 </div>
