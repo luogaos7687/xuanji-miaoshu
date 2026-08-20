@@ -5,7 +5,7 @@ Uses terser for JS obfuscation.
 import re, subprocess, tempfile, os, shutil
 
 source = r'D:\ObsidianVaults\MyVault\03.参考资料库\04.国学课程\玄机妙数起卦工具.html'
-deploy = r'D:\ObsidianVaults\MyVault\xuanji-miaoshu\index.html'
+deploy = r'D:\Projects\xuanji-miaoshu\index.html'
 
 # Find terser path
 terser_path = shutil.which('terser') or shutil.which('terser.cmd')
