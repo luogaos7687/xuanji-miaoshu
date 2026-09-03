@@ -182,12 +182,10 @@
     try { query[decodeURIComponent(k)] = decodeURIComponent(v) } catch (e) { query[k] = v }
   });
   var courseId = query.courseId || '';
-  // token 读取优先级：#fragment > query(兼容) > sessionStorage(站内导航携带)
-  var token = query.token || '';
-  if (!token) {
-    var hm = (location.hash || '').match(/[#&]token=([^&]*)/);
-    if (hm) { try { token = decodeURIComponent(hm[1]) } catch (e) { token = hm[1] } }
-  }
+  // token 读取优先级：#fragment > sessionStorage(站内导航携带)。禁止从 query string 读 token（防泄露进服务器日志/Referer）
+  var token = '';
+  var hm = (location.hash || '').match(/[#&]token=([^&]*)/);
+  if (hm) { try { token = decodeURIComponent(hm[1]) } catch (e) { token = hm[1] } }
   if (!token) { try { token = sessionStorage.getItem('h5_token') || '' } catch (e) {} }
   if (token) { try { sessionStorage.setItem('h5_token', token) } catch (e) {} }
   // 立即从 URL 抹掉 token（防 Referer / 服务器日志泄露）
@@ -240,7 +238,11 @@
         var tag = child.tagName.toUpperCase();
         if (DROP[tag]) { child.parentNode.removeChild(child); return; }
         if (!allowedTags[tag]) {
-          while (child.firstChild) child.parentNode.insertBefore(child.firstChild, child);
+          while (child.firstChild) {
+            var next = child.firstChild;
+            child.parentNode.insertBefore(next, child);
+            if (next.nodeType === 1) clean(next);
+          }
           child.parentNode.removeChild(child);
           return;
         }
