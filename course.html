@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="太始文脉 · 传统文化研习课程" />
+  <title>太始文脉 · 研习课程</title>
+  <script src="https://static.cloudbase.net/cloudbase-js-sdk/2.17.3/cloudbase.full.js"></script>
+  <style>
+    :root {
+      --gold: #c9a96e;
+      --gold-deep: #b8945a;
+      --ink: #1a1a2e;
+      --ink-soft: #2d2d5e;
+      --text: #333333;
+      --text-2: #777777;
+      --bg: #faf8f4;
+      --card: #ffffff;
+      --danger: #e74c3c;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.7;
+      padding-bottom: 40px;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; }
+
+    /* 顶部 */
+    .topbar {
+      background: var(--ink);
+      color: #fff;
+      position: sticky; top: 0; z-index: 20;
+      box-shadow: 0 1px 0 rgba(0,0,0,.08);
+    }
+    .topbar-inner {
+      display: flex; align-items: center; justify-content: center;
+      height: 52px; position: relative;
+    }
+    .topbar-title { font-size: 17px; font-weight: 700; letter-spacing: 2px; }
+    .topbar-back {
+      position: absolute; left: 0; top: 0; height: 52px;
+      display: flex; align-items: center; padding: 0 16px;
+      font-size: 15px; color: var(--gold); cursor: pointer;
+    }
+
+    /* 课程列表 */
+    .course-list { padding: 16px 14px; }
+    .course-card {
+      background: var(--card); border-radius: 14px; overflow: hidden;
+      box-shadow: 0 6px 18px rgba(26,26,46,.06); border: 1px solid #f0ece2;
+      margin-bottom: 16px; cursor: pointer;
+    }
+    .course-cover { width: 100%; height: 170px; background: linear-gradient(135deg, var(--ink), var(--ink-soft)); position: relative; }
+    .course-cover img { width: 100%; height: 100%; object-fit: cover; }
+    .course-cover-text {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; color: #fff; padding: 0 20px; text-align: center;
+    }
+    .course-cover-type { font-size: 12px; color: var(--gold); letter-spacing: 2px; margin-bottom: 8px; }
+    .course-cover-title { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+    .course-body { padding: 14px 16px; }
+    .course-name { font-size: 16px; font-weight: 700; color: var(--ink); }
+    .course-meta { font-size: 13px; color: var(--text-2); margin-top: 6px; }
+    .course-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+    .course-price { font-size: 18px; font-weight: 800; color: var(--danger); }
+    .course-price.free { color: #27ae60; }
+    .course-tag { font-size: 12px; color: var(--gold-deep); border: 1px solid var(--gold); padding: 2px 10px; border-radius: 12px; }
+
+    /* 详情 */
+    .detail-cover { width: 100%; height: 220px; background: linear-gradient(135deg, var(--ink), var(--ink-soft)); position: relative; }
+    .detail-cover img { width: 100%; height: 100%; object-fit: cover; }
+    .detail-cover-text {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 22px; font-weight: 700; letter-spacing: 2px; padding: 0 20px; text-align: center;
+    }
+    .card { background: var(--card); border-radius: 14px; padding: 18px 16px; margin: 14px; border: 1px solid #f0ece2; box-shadow: 0 6px 18px rgba(26,26,46,.05); }
+    .card h2 { font-size: 16px; color: var(--ink); margin-bottom: 10px; letter-spacing: 1px; }
+    .detail-name { font-size: 20px; font-weight: 800; color: var(--ink); }
+    .detail-meta { font-size: 13px; color: var(--text-2); margin-top: 8px; line-height: 1.9; }
+    .detail-price-row { display: flex; align-items: baseline; gap: 10px; margin-top: 12px; }
+    .detail-price { font-size: 26px; font-weight: 800; color: var(--danger); }
+    .detail-price.free { color: #27ae60; }
+    .detail-original { font-size: 14px; color: var(--text-2); text-decoration: line-through; }
+    .desc-content { font-size: 14px; color: var(--text); line-height: 1.9; word-break: break-word; }
+    .desc-content img { max-width: 100%; border-radius: 8px; }
+    .highlight-item { font-size: 14px; color: var(--text); padding: 6px 0; }
+    .highlight-icon { color: var(--gold-deep); font-weight: 700; margin-right: 8px; }
+    .benefit-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .benefit-tag { font-size: 12px; color: var(--gold-deep); background: rgba(201,169,110,.1); border: 1px solid rgba(201,169,110,.4); padding: 4px 12px; border-radius: 14px; }
+
+    /* 章节列表 */
+    .chapter-item { border-bottom: 1px solid #f5f2ea; padding: 13px 0; }
+    .chapter-item:last-child { border-bottom: none; }
+    .chapter-head { display: flex; align-items: center; gap: 10px; }
+    .chapter-num {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      background: var(--ink); color: var(--gold); font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .chapter-title { font-size: 15px; font-weight: 600; color: var(--ink); flex: 1; }
+    .chapter-badge { font-size: 12px; color: var(--gold-deep); }
+    .chapter-desc { font-size: 13px; color: var(--text-2); margin-top: 6px; padding-left: 32px; }
+    .chapter-playing { font-size: 12px; color: var(--danger); flex-shrink: 0; }
+
+    /* 播放器 */
+    .player-wrap { background: #000; }
+    .player-wrap video { width: 100%; height: 220px; background: #000; }
+    .player-fallback { height: 220px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; }
+
+    /* 权限门槛 */
+    .gate-box { text-align: center; padding: 30px 20px; }
+    .gate-icon { font-size: 44px; }
+    .gate-title { font-size: 18px; font-weight: 700; color: var(--ink); margin: 14px 0 8px; }
+    .gate-desc { font-size: 14px; color: var(--text-2); margin-bottom: 20px; }
+    .btn {
+      display: inline-block; padding: 12px 34px; border-radius: 26px;
+      font-size: 15px; font-weight: 600; cursor: pointer; border: none;
+    }
+    .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-deep)); color: #fff; }
+    .btn-ghost { border: 1px solid var(--ink); color: var(--ink); background: transparent; }
+
+    /* 加载/提示 */
+    .loading-mask {
+      position: fixed; inset: 0; z-index: 99; background: rgba(0,0,0,.45);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .loading-box { background: #fff; border-radius: 12px; padding: 24px 30px; text-align: center; }
+    .spinner {
+      width: 30px; height: 30px; border: 3px solid #eee; border-top-color: var(--gold);
+      border-radius: 50%; margin: 0 auto 12px; animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-txt { font-size: 14px; color: var(--text-2); }
+    #toast {
+      position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      background: rgba(0,0,0,.8); color: #fff; font-size: 14px;
+      padding: 12px 22px; border-radius: 8px; z-index: 100; display: none;
+      max-width: 80%; text-align: center;
+    }
+    .empty { text-align: center; color: var(--text-2); font-size: 14px; padding: 60px 20px; }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-back" id="backBtn" style="display:none;">‹ 返回</div>
+      <div class="topbar-title" id="topTitle">研习课程</div>
+    </div>
+  </header>
+
+  <div id="app"></div>
+
+  <div class="loading-mask" id="loadingMask" style="display:none;">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <div class="loading-txt" id="loadingTxt">加载中...</div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var ENV_ID = 'cloud1-d8g87sntq35f31dbb';
+  var app = (typeof cloudbase !== 'undefined') ? cloudbase.init({ env: ENV_ID }) : null;
+
+  // ---------- URL 参数 ----------
+  var query = {};
+  (location.search || '').replace(/^\?/, '').split('&').forEach(function (kv) {
+    if (!kv) return;
+    var idx = kv.indexOf('=');
+    var k = idx >= 0 ? kv.slice(0, idx) : kv;
+    var v = idx >= 0 ? kv.slice(idx + 1) : '';
+    try { query[decodeURIComponent(k)] = decodeURIComponent(v) } catch (e) { query[k] = v }
+  });
+  var courseId = query.courseId || '';
+  // token 读取优先级：#fragment > query(兼容) > sessionStorage(站内导航携带)
+  var token = query.token || '';
+  if (!token) {
+    var hm = (location.hash || '').match(/[#&]token=([^&]*)/);
+    if (hm) { try { token = decodeURIComponent(hm[1]) } catch (e) { token = hm[1] } }
+  }
+  if (!token) { try { token = sessionStorage.getItem('h5_token') || '' } catch (e) {} }
+  if (token) { try { sessionStorage.setItem('h5_token', token) } catch (e) {} }
+  // 立即从 URL 抹掉 token（防 Referer / 服务器日志泄露）
+  try {
+    var stripped = location.pathname
+      + location.search.replace(/([?&])token=[^&]*/g, '$1').replace(/[?&]$/, '')
+      + location.hash.replace(/([#&])token=[^&]*/g, '$1').replace(/[#&]$/, '');
+    if (stripped !== (location.pathname + location.search + location.hash)) {
+      history.replaceState(null, '', stripped);
+    }
+  } catch (e) {}
+
+  var el = {
+    app: document.getElementById('app'),
+    topTitle: document.getElementById('topTitle'),
+    backBtn: document.getElementById('backBtn'),
+    loadingMask: document.getElementById('loadingMask'),
+    loadingTxt: document.getElementById('loadingTxt'),
+    toast: document.getElementById('toast')
+  };
+
+  // ---------- 工具 ----------
+  function fmtPrice(cents) {
+    var n = Number(cents);
+    if (!n && n !== 0) return '0.00';
+    return (n / 100).toFixed(2);
+  }
+  function esc(s) {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  // 富文本白名单清洗：防存储型 XSS（后台课程介绍/大纲是 HTML，需过滤脚本与事件）
+  function sanitizeHtml(html) {
+    if (!html) return '';
+    var doc;
+    try {
+      doc = new DOMParser().parseFromString(String(html), 'text/html');
+    } catch (e) { return esc(String(html)); }
+    var allowedTags = {
+      P:1, BR:1, DIV:1, SPAN:1, IMG:1, H1:1, H2:1, H3:1, H4:1, H5:1, H6:1,
+      STRONG:1, B:1, I:1, EM:1, U:1, UL:1, OL:1, LI:1, BLOCKQUOTE:1, A:1, HR:1,
+      PRE:1, CODE:1, TABLE:1, THEAD:1, TBODY:1, TR:1, TD:1, TH:1, FIGURE:1, FIGCAPTION:1,
+      VIDEO:1, SOURCE:1, SECTION:1, ARTICLE:1, FONT:1
+    };
+    var allowedAttrs = { src:1, href:1, alt:1, title:1, width:1, height:1, class:1, style:1, colspan:1, rowspan:1, controls:1, poster:1 };
+    var DROP = { SCRIPT:1, STYLE:1, IFRAME:1, OBJECT:1, EMBED:1, LINK:1, META:1, FORM:1, INPUT:1, BUTTON:1, TEXTAREA:1, SELECT:1, SVG:1, MATH:1 };
+    function clean(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+        if (child.nodeType !== 1) return;
+        var tag = child.tagName.toUpperCase();
+        if (DROP[tag]) { child.parentNode.removeChild(child); return; }
+        if (!allowedTags[tag]) {
+          while (child.firstChild) child.parentNode.insertBefore(child.firstChild, child);
+          child.parentNode.removeChild(child);
+          return;
+        }
+        Array.prototype.slice.call(child.attributes).forEach(function (attr) {
+          var name = attr.name.toLowerCase();
+          var val = attr.value || '';
+          if (name.indexOf('on') === 0) { child.removeAttribute(attr.name); return; }
+          if (!allowedAttrs[name]) { child.removeAttribute(attr.name); return; }
+          if ((name === 'href' || name === 'src') && /^\s*(javascript:|data:text\/html|vbscript:)/i.test(val)) { child.removeAttribute(attr.name); return; }
+          if (name === 'style' && /expression|javascript:|url\s*\(/i.test(val)) { child.removeAttribute(attr.name); return; }
+        });
+        clean(child);
+      });
+    }
+    clean(doc.body);
+    return doc.body.innerHTML;
+  }
+  function showLoading(txt) {
+    el.loadingTxt.textContent = txt || '加载中...';
+    el.loadingMask.style.display = 'flex';
+  }
+  function hideLoading() { el.loadingMask.style.display = 'none'; }
+  var toastTimer = null;
+  function toast(msg) {
+    el.toast.textContent = msg;
+    el.toast.style.display = 'block';
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.toast.style.display = 'none'; }, 2200);
+  }
+  function typeText(t) {
+    if (t === 'offline') return '线下';
+    if (t === 'online') return '线上';
+    if (t === 'free') return '免费';
+    return '';
+  }
+  function isFreeCourse(c) {
+    return c.type === 'free' || !c.price || Number(c.price) <= 0;
+  }
+
+  // ---------- CloudBase ----------
+  function ensureLogin() {
+    if (!app) return Promise.resolve();
+    try {
+      var auth = app.auth({ persistence: 'local' });
+      return auth.getLoginState().then(function (state) {
+        if (!state) return auth.signInAnonymously();
+      }).catch(function () {
+        return auth.signInAnonymously().catch(function () {});
+      });
+    } catch (e) { return Promise.resolve(); }
+  }
+  function callFn(action, data) {
+    if (!app) return Promise.resolve({ success: false, error: 'SDK 未加载' });
+    return ensureLogin().then(function () {
+      var payload = Object.assign({ action: action }, data || {});
+      return app.callFunction({ name: 'admin', data: payload });
+    }).then(function (res) {
+      return res && res.result ? res.result : { success: false, error: '无返回' };
+    }).catch(function (e) {
+      return { success: false, error: (e && e.message) || '网络异常' };
+    });
+  }
+
+  // ---------- 提取视频 ----------
+  function extractVideos(course) {
+    var all = [];
+    (course.chapters || []).forEach(function (ch, chIdx) {
+      var vids = ch.videos || [];
+      if (vids.length) {
+        vids.forEach(function (cv, vIdx) {
+          all.push({
+            chapterIndex: chIdx, chapterTitle: ch.title || '',
+            title: cv.title || ('第' + (vIdx + 1) + '节'),
+            fileId: cv.fileId || cv.videoId || '', url: cv.url || '',
+            type: cv.type || 'vod'
+          });
+        });
+      } else if (ch.videoId || ch.fileId || ch.videoUrl) {
+        all.push({
+          chapterIndex: chIdx, chapterTitle: ch.title || '',
+          title: ch.title || '章节视频',
+          fileId: ch.videoId || ch.fileId || '', url: ch.videoUrl || '',
+          type: 'vod'
+        });
+      }
+    });
+    (course.videos || []).forEach(function (v) {
+      all.push({
+        chapterIndex: -1, chapterTitle: '',
+        title: v.title || '课程视频',
+        fileId: v.fileId || v.videoId || '', url: v.url || '',
+        type: v.type || 'vod'
+      });
+    });
+    return all;
+  }
+
+  // ---------- 渲染 ----------
+  function renderList(courses) {
+    el.topTitle.textContent = '研习课程';
+    el.backBtn.style.display = 'none';
+    if (!courses.length) {
+      el.app.innerHTML = '<div class="empty">暂无课程，敬请期待</div>';
+      return;
+    }
+    var html = '<div class="course-list">';
+    courses.forEach(function (c) {
+      var free = isFreeCourse(c);
+      var cover = c.cover
+        ? '<img src="' + esc(c.cover) + '" />'
+        : '<div class="course-cover-text"><div class="course-cover-type">' + esc(typeText(c.type)) + '</div><div class="course-cover-title">' + esc(c.name) + '</div></div>';
+      html +=
+        '<div class="course-card" data-id="' + esc(c._id) + '">' +
+          '<div class="course-cover">' + cover + '</div>' +
+          '<div class="course-body">' +
+            '<div class="course-name">' + esc(c.name) + '</div>' +
+            '<div class="course-meta">' +
+              (c.teacher ? esc(c.teacher) + ' · ' : '') +
+              (c.duration ? esc(c.duration) : '') +
+            '</div>' +
+            '<div class="course-bottom">' +
+              '<span class="course-price ' + (free ? 'free' : '') + '">' + (free ? '免费' : '¥' + fmtPrice(c.price)) + '</span>' +
+              '<span class="course-tag">查看详情 ›</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+    el.app.innerHTML = html;
+    Array.prototype.forEach.call(el.app.querySelectorAll('.course-card'), function (card) {
+      card.addEventListener('click', function () {
+        var id = card.getAttribute('data-id');
+        // token 已存 sessionStorage，站内导航靠它携带，不再放 URL
+        location.href = 'course.html?courseId=' + encodeURIComponent(id);
+      });
+    });
+  }
+
+  function renderDetail(data) {
+    var course = data.course || {};
+    var hasAccess = data.hasAccess;
+    var videos = extractVideos(course);
+    var free = isFreeCourse(course);
+
+    el.topTitle.textContent = '课程详情';
+    el.backBtn.style.display = 'flex';
+
+    var cover = course.cover
+      ? '<img src="' + esc(course.cover) + '" />'
+      : '<div class="detail-cover-text">' + esc(course.name) + '</div>';
+
+    var html =
+      '<div class="detail-cover">' + cover + '</div>' +
+      '<div class="card">' +
+        '<div class="detail-name">' + esc(course.name) + '</div>' +
+        '<div class="detail-meta">' +
+          (course.teacher ? '👤 ' + esc(course.teacher) + '<br/>' : '') +
+          (course.duration ? '⏱ ' + esc(course.duration) + '　' : '') +
+          (typeText(course.type) ? '📌 ' + typeText(course.type) + '<br/>' : '') +
+          (course.location ? '📍 ' + esc(course.location) : '') +
+        '</div>' +
+        '<div class="detail-price-row">' +
+          (free ? '<span class="detail-price free">免费</span>' : '<span class="detail-price">¥' + fmtPrice(course.price) + '</span>') +
+          (course.originalPrice && Number(course.originalPrice) > 0 ? '<span class="detail-original">¥' + fmtPrice(course.originalPrice) + '</span>' : '') +
+        '</div>' +
+      '</div>';
+
+    // 播放器
+    if (videos.length > 0) {
+      html += '<div class="player-wrap" id="playerWrap"><div class="player-fallback">点击下方章节开始学习</div></div>';
+    }
+
+    // 介绍
+    if (course.description || course.desc) {
+      html += '<div class="card"><h2>课程介绍</h2><div class="desc-content">' + sanitizeHtml(course.description || course.desc) + '</div></div>';
+    }
+    // 亮点
+    if (course.highlights && course.highlights.length) {
+      html += '<div class="card"><h2>✨ 课程亮点</h2>';
+      course.highlights.forEach(function (h) {
+        html += '<div class="highlight-item"><span class="highlight-icon">✓</span>' + esc(h) + '</div>';
+      });
+      html += '</div>';
+    }
+    // 大纲
+    if (course.outline) {
+      html += '<div class="card"><h2>📋 课程大纲</h2><div class="desc-content">' + sanitizeHtml(course.outline) + '</div></div>';
+    }
+    // 权益
+    if (course.benefits && course.benefits.length) {
+      var bens = Array.isArray(course.benefits) ? course.benefits : String(course.benefits).split('\n').filter(Boolean);
+      if (bens.length) {
+        html += '<div class="card"><h2>🎁 课程权益</h2><div class="benefit-tags">';
+        bens.forEach(function (b) { html += '<span class="benefit-tag">' + esc(b) + '</span>'; });
+        html += '</div></div>';
+      }
+    }
+    // 章节
+    if (videos.length > 0) {
+      html += '<div class="card"><h2>📖 课程章节（' + videos.length + '节）</h2>';
+      videos.forEach(function (v, i) {
+        html +=
+          '<div class="chapter-item" data-vidx="' + i + '">' +
+            '<div class="chapter-head">' +
+              '<span class="chapter-num">' + (i + 1) + '</span>' +
+              '<span class="chapter-title">' + esc(v.title) + '</span>' +
+              (v.fileId ? '<span class="chapter-badge">🎬</span>' : '') +
+            '</div>' +
+            (v.chapterTitle ? '<div class="chapter-desc">' + esc(v.chapterTitle) + '</div>' : '') +
+          '</div>';
+      });
+      html += '</div>';
+    }
+    // 权限门槛
+    if (!hasAccess && !free) {
+      html +=
+        '<div class="card gate-box">' +
+          '<div class="gate-icon">🔒</div>' +
+          '<div class="gate-title">开通后观看全部课程</div>' +
+          '<div class="gate-desc">本课程需开通学习会员或在小程序内购买后观看</div>' +
+          '<button class="btn btn-gold" id="gateBackBtn">返回小程序开通</button>' +
+        '</div>';
+    }
+
+    el.app.innerHTML = html;
+
+    // 返回
+    el.backBtn.onclick = function () { goBack(); };
+
+    // 章节点击 → 播放
+    Array.prototype.forEach.call(el.app.querySelectorAll('.chapter-item'), function (item) {
+      item.addEventListener('click', function () {
+        var vidx = parseInt(item.getAttribute('data-vidx'), 10);
+        playVideo(videos[vidx]);
+      });
+    });
+
+    // 门槛按钮
+    var gateBtn = document.getElementById('gateBackBtn');
+    if (gateBtn) {
+      gateBtn.addEventListener('click', function () { backToMiniProgram(); });
+    }
+  }
+
+  function playVideo(cv) {
+    if (!cv) return;
+    if (!cv.fileId) {
+      if (cv.url) { toast('该视频需在浏览器中打开'); }
+      else { toast('视频资源不可用'); }
+      return;
+    }
+    if (!hasAccessFlag) {
+      toast('请先开通课程');
+      return;
+    }
+    showLoading('加载视频...');
+    callFn('getVodPlayUrl', { fileId: cv.fileId, courseId: courseId, token: token }).then(function (res) {
+      hideLoading();
+      if (res.success && res.data && res.data.playUrl) {
+        var pw = document.getElementById('playerWrap');
+        if (pw) {
+          pw.innerHTML = '<video src="' + esc(res.data.playUrl) + '" controls autoplay playsinline webkit-playsinline style="width:100%;height:220px;background:#000;"></video>';
+          if (res.data.warning) toast(res.data.warning);
+        }
+      } else {
+        toast(res.error || '无播放权限');
+      }
+    });
+  }
+
+  function goBack() {
+    if (location.href.indexOf('courseId=') !== -1 && history.length > 1) {
+      // 详情 → 列表
+      history.back();
+    } else {
+      backToMiniProgram();
+    }
+  }
+
+  function backToMiniProgram() {
+    if (typeof wx !== 'undefined' && wx.miniProgram) {
+      wx.miniProgram.navigateBack({ delta: 1 });
+    } else if (typeof wx !== 'undefined' && wx.miniProgram && wx.miniProgram.switchTab) {
+      wx.miniProgram.switchTab({ url: '/pages/index/index' });
+    } else {
+      toast('请返回小程序操作');
+    }
+  }
+
+  var hasAccessFlag = false;
+
+  // ---------- 入口 ----------
+  function main() {
+    showLoading('加载中...');
+    if (courseId) {
+      callFn('getH5CourseData', { courseId: courseId, token: token }).then(function (res) {
+        hideLoading();
+        if (res.success && res.data) {
+          hasAccessFlag = !!res.data.hasAccess;
+          renderDetail(res.data);
+        } else {
+          el.app.innerHTML = '<div class="empty">' + esc(res.error || '课程不存在') + '</div>';
+          el.backBtn.style.display = 'flex';
+          el.backBtn.onclick = function () { goBack(); };
+        }
+      });
+    } else {
+      callFn('getCourses', { status: 'selling' }).then(function (res) {
+        hideLoading();
+        if (res.success && res.data) {
+          renderList(res.data);
+        } else {
+          el.app.innerHTML = '<div class="empty">' + esc(res.error || '加载失败') + '</div>';
+        }
+      });
+    }
+  }
+
+  main();
+})();
+</script>
+</body>
+</html>
